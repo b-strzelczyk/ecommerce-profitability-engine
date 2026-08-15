@@ -1,0 +1,100 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 283.20001220703125,
+        "y": 46.400001525878906
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 628,
+            "y": 197
+          },
+          "nodeIndex": "Tbl_marketing",
+          "nodeLineageTag": "e0f99390-2dcc-4804-bcec-feb89988ca44",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 329,
+            "y": 0
+          },
+          "nodeIndex": "Tbl_orders",
+          "nodeLineageTag": "44452e4b-b32f-49ab-84f8-7a1c2ff26fc9",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 331
+          },
+          "nodeIndex": "Tbl_Product_dictionary",
+          "nodeLineageTag": "422c58c2-80fc-4913-a167-e4ec56994863",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 872,
+            "y": 413
+          },
+          "nodeIndex": "Tbl_settings",
+          "nodeLineageTag": "9f8167c1-7e2e-4e4b-8742-a950a5d66546",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 316,
+            "y": 353
+          },
+          "nodeIndex": "Dim_calendar",
+          "nodeLineageTag": "457670e5-2483-4d0a-bd14-d5dcd36f6709",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 968,
+            "y": 224.5
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "a9072826-6c99-4396-9c31-d0a8036f29ee",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Wszystkie tabele",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Wszystkie tabele",
+  "defaultDiagram": "Wszystkie tabele"
+}

@@ -1,0 +1,10 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+# Ignore OS-generated temporary files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files and backups
+*~
+*.bak
+

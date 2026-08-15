@@ -1,0 +1,12 @@
+relationship 96b3a4a6-b511-f28a-611d-56670083d24d
+	fromColumn: Tbl_orders.Order_Date
+	toColumn: Dim_calendar.Date
+
+relationship e621f764-ab18-c769-b4b2-3ef7342794c0
+	fromColumn: Tbl_marketing.Date
+	toColumn: Dim_calendar.Date
+
+relationship d6454c1d-99d7-7140-6007-3e0a1d5b37b4
+	fromColumn: Tbl_orders.Product_SKU
+	toColumn: Tbl_Product_dictionary.Product_SKU
+

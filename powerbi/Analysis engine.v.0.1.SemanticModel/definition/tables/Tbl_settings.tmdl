@@ -1,0 +1,33 @@
+table Tbl_settings
+	lineageTag: 9f8167c1-7e2e-4e4b-8742-a950a5d66546
+
+	column Parameter
+		dataType: string
+		lineageTag: 752d8e90-8b5a-4370-aad8-bc65c6f0335a
+		summarizeBy: none
+		sourceColumn: Parameter
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: string
+		lineageTag: 49c78280-10d4-40be-bc5f-1db6ebea6e44
+		summarizeBy: none
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Tbl_settings = m
+		mode: import
+		source =
+				let
+				    Źródło = Excel.Workbook(File.Contents("C:\Users\barte\Downloads\Ecom_Profitability_Engine_Data_v1.0.xlsx"), null, true),
+				    Tbl_settings_Table = Źródło{[Item="Tbl_settings",Kind="Table"]}[Data],
+				    #"Zmieniono typ" = Table.TransformColumnTypes(Tbl_settings_Table,{{"Parameter", type text}, {"Value", type text}})
+				in
+				    #"Zmieniono typ"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+

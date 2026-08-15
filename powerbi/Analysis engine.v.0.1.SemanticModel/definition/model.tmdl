@@ -1,0 +1,23 @@
+model Model
+	culture: pl-PL
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: pl-PL
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Tbl_marketing","Tbl_orders","Tbl_Product_dictionary","Tbl_settings","_Measures"]
+
+annotation PBI_ProTooling = ["TMDLView_Desktop","DevMode","DaxQueryView_Desktop"]
+
+ref table Tbl_marketing
+ref table Tbl_orders
+ref table Tbl_Product_dictionary
+ref table Tbl_settings
+ref table Dim_calendar
+ref table _Measures
+
+ref cultureInfo pl-PL
+

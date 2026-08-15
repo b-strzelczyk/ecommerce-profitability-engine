@@ -1,0 +1,389 @@
+table _Measures
+	lineageTag: a9072826-6c99-4396-9c31-d0a8036f29ee
+
+	measure 'Gross Revenue' = SUMX('tbl_Orders', 'tbl_Orders'[Quantity] * 'tbl_Orders'[Unit_Price])
+		displayFolder: Financial
+		lineageTag: 3fc32f8f-793a-429e-a71c-93bef46235b4
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Net Revenue' = ```
+			
+			VAR TaxRateText = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Standard Tax Rate")
+			
+			VAR TaxRateNum = 
+			    IFERROR(
+			        
+			        VALUE(TaxRateText), 
+			        IFERROR(
+			            
+			            VALUE(SUBSTITUTE(TaxRateText, ".", ",")), 
+			            
+			            VALUE(SUBSTITUTE(TaxRateText, ",", "."))
+			        )
+			    )
+			    
+			RETURN
+			DIVIDE([Gross Revenue], 1 + TaxRateNum)
+			```
+		displayFolder: Financial
+		lineageTag: b6b5d6c1-917c-42d2-b1f9-5a5aa2b1e515
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Total COGS' = SUMX('tbl_Orders', 'tbl_Orders'[Quantity] * RELATED('Tbl_Product_dictionary'[Unit_COGS]))
+		displayFolder: Financial
+		lineageTag: a6042faf-0653-4eef-8fc0-fe952da55b46
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Gross Profit' = [Net Revenue] - [Total COGS]
+		displayFolder: Financial
+		lineageTag: b7e49f6e-b6ba-447d-a434-64e10cf9f674
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Total Ad Spend' = SUM('tbl_Marketing'[Spend_Amount])
+		displayFolder: Marketing
+		lineageTag: a5d0442a-0d1d-45bb-aff3-ba88dbf98eba
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Blended ROAS' = DIVIDE([Net Revenue], [Total Ad Spend], 0)
+		displayFolder: Marketing
+		lineageTag: 36982ba1-03cf-45a4-9ce8-2b154d7f366e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Orders' = COUNTROWS('tbl_Orders')
+		formatString: 0
+		displayFolder: Financial
+		lineageTag: f6696c3b-d92f-4d83-a531-afbabd8a58bf
+
+	measure CAC = DIVIDE([Total Ad Spend], [Total Orders], 0)
+		displayFolder: Marketing
+		lineageTag: dd8c2998-f37c-4e06-8187-30b564b595cd
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Profit' = [Gross Profit] - [Total Ad Spend]
+		displayFolder: Financial
+		lineageTag: b17d6c6b-cf9c-4b75-ba95-eba775136b13
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure POAS = DIVIDE([Gross Profit], [Total Ad Spend], 0)
+		displayFolder: Marketing
+		lineageTag: f2e1b636-ee61-4e82-a63c-20b15a973271
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Revenue (LM)' =
+			
+			CALCULATE(
+			    [Net Revenue],
+			    DATEADD('Dim_Calendar'[Date], -1, MONTH)
+			)
+		displayFolder: Time Intelligence
+		lineageTag: 7f2f2e84-452a-47a7-8c9b-00b7e2ed6f1a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Revenue MoM %' =
+			
+			DIVIDE([Net Revenue] - [Net Revenue (LM)], [Net Revenue (LM)], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Time Intelligence
+		lineageTag: 14f328f4-243d-41de-9816-6fced668cc8a
+
+	measure 'Net Profit (LY)' =
+			
+			CALCULATE(
+			    [Net Profit],
+			    SAMEPERIODLASTYEAR('Dim_Calendar'[Date])
+			)
+		displayFolder: Time Intelligence
+		lineageTag: ce6743c1-c903-40d7-9a69-4ab68c2124b4
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Net Profit YoY %' =
+			
+			VAR BaseProfit = [Net Profit]
+			VAR LastYearProfit = [Net Profit (LY)]
+			RETURN
+			IF(ABS(LastYearProfit) < (BaseProfit * 0.05), BLANK(), DIVIDE(BaseProfit - LastYearProfit, ABS(LastYearProfit)))
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Time intelligence
+		lineageTag: e3827afc-3914-491d-af02-2176302c92cc
+
+	measure 'Gross Margin %' = DIVIDE([Gross Profit], [Net Revenue], 0)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Financial
+		lineageTag: 5da00db9-5637-448d-a2e7-10df39d9beb0
+
+	measure 'Average order value' = DIVIDE([Net Revenue], [Total Orders], 0) --Average order value--
+		displayFolder: Financial
+		lineageTag: 4ebc58e2-2685-450d-b5fb-553c5c38be78
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Profit (Bar)' = [Gross Profit]
+		displayFolder: Financial
+		lineageTag: d339f01b-0ee1-4b9c-a867-7470c1861076
+
+		formatStringDefinition =
+				VAR CurrencySymbol = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Base Currency")
+				RETURN
+				"#,0.00 """ & CurrencySymbol & """"
+
+	measure 'Target Gross Margin' = ```
+			
+			VAR TargetText = LOOKUPVALUE('tbl_Settings'[Value], 'tbl_Settings'[Parameter], "Target Profit Margin")
+			
+			VAR SafeText = TargetText & "0"
+			
+			VAR TargetNum = 
+			    IFERROR(
+			        VALUE(SafeText), 
+			        IFERROR(
+			            VALUE(SUBSTITUTE(SafeText, ".", ",")), 
+			            VALUE(SUBSTITUTE(SafeText, ",", "."))
+			        )
+			    )
+			RETURN
+			TargetNum
+			```
+		displayFolder: Financial
+		lineageTag: a51ba753-df09-467c-b32e-c90be5aa9b18
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Gross Profit MoM %' = ```
+			
+			VAR CurrentProfit = [Gross Profit]
+			VAR PreviousProfit = CALCULATE([Gross Profit], DATEADD(Dim_calendar[Date], -1, MONTH))
+			
+			RETURN
+			IF(
+			    ISBLANK(PreviousProfit) ||  ABS(PreviousProfit) < 1, 
+			    BLANK(), 
+			    DIVIDE(CurrentProfit - PreviousProfit, ABS(PreviousProfit))
+			)
+			```
+		displayFolder: Time Intelligence
+		lineageTag: 95acc17d-3751-48be-a5c3-6f5f87c89320
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'CAC MoM %' = ```
+			
+			VAR CurrentCAC = [CAC]
+			
+			VAR PreviousCAC = CALCULATE([CAC], DATEADD(Dim_calendar[Date], -1, MONTH))
+			
+			RETURN
+			
+			IF(
+			    ISBLANK(PreviousCAC) || PreviousCAC <= 0, 
+			    BLANK(), 
+			    DIVIDE(CurrentCAC - PreviousCAC, PreviousCAC)
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Time Intelligence
+		lineageTag: 49bdeb4f-491c-43c6-8fd4-f3e7455df43c
+
+	measure 'Blended ROAS MoM %' = ```
+			
+			VAR CurrentROAS = [Blended ROAS]
+			VAR PreviousROAS = CALCULATE([Blended ROAS], DATEADD(Dim_calendar[Date], -1, MONTH))
+			
+			RETURN
+			IF(
+			    ISBLANK(PreviousROAS) || PreviousROAS <= 0, 
+			    BLANK(), 
+			    DIVIDE(CurrentROAS - PreviousROAS, PreviousROAS)
+			)
+			```
+		displayFolder: Financial
+		lineageTag: a50024e5-430f-4de1-8c6f-dec62483e7f6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'POAS MoM %' = ```
+			
+			VAR CurrentPOAS = [POAS]
+			VAR PreviousPOAS = CALCULATE([POAS], DATEADD(Dim_calendar[Date], -1, MONTH))
+			
+			RETURN
+			IF(
+			    ISBLANK(PreviousPOAS) || ABS(PreviousPOAS) < 0.01, 
+			    BLANK(), 
+			    DIVIDE(CurrentPOAS - PreviousPOAS, ABS(PreviousPOAS))
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Marketing
+		lineageTag: 36949b8b-b831-415e-87dd-3f776172df03
+
+	measure 'Platform POAS' =
+			
+			DIVIDE([Gross Profit], [Total Ad Spend])
+		displayFolder: Marketing
+		lineageTag: 2779a50c-f16e-48af-9959-2460907ebc97
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Platform ROAS' =
+			
+			DIVIDE([Net Revenue], [Total Ad Spend])
+		displayFolder: Marketing
+		lineageTag: 17015f4a-b410-4a9b-a9f4-decd5b69b67b
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Margin Bleeders Alert' = ```
+			
+			
+			VAR _BleedersTable = 
+			    FILTER(
+			        VALUES(Tbl_Product_dictionary[Product_SKU]), 
+			        [Gross Margin %] < 0
+			    )
+			
+			
+			VAR _loss = 
+			    CALCULATE(
+			        [Gross Profit],
+			        _BleedersTable
+			    )
+			
+			
+			VAR _count = 
+			    COUNTROWS(_BleedersTable)
+			
+			RETURN
+			IF(
+			    _count > 0,
+			    IF(
+			        _count = 1,
+			        "1 product generates a loss of " & FORMAT(ABS(_loss), "#,##0") & " USD",
+			        FORMAT(_count, "0") & " products generate a total loss of " & FORMAT(ABS(_loss), "#,##0") & " USD"
+			    ),
+			    "All products are profitable ✓"
+			)
+			```
+		displayFolder: Financial
+		lineageTag: 7aae91e0-13b2-4052-82d4-bc5302f1e551
+
+	measure 'POAS Status' = ```
+			
+			VAR _poas = [POAS]
+			VAR _diff = _poas - 1
+			RETURN
+			IF(
+			    ISBLANK(_poas), 
+			    BLANK(),
+			    IF(
+			        _poas >= 1,
+			        "+" & FORMAT(_diff, "0.00") & "x above breakeven",
+			        FORMAT(_diff, "0.00") & "x below breakeven"
+			    )
+			)
+			```
+		displayFolder: Marketing
+		lineageTag: 4b6cac91-a207-4f06-936e-e77158408613
+
+	measure 'Product Return Rate %' = ```
+			
+			
+			VAR _ReturnedCount = 
+			    CALCULATE(
+			        COUNTA(Tbl_orders[Return_Status]), 
+			        Tbl_orders[Return_Status] = "Returned"
+			    )
+			
+			
+			VAR _DeliveredCount = 
+			    CALCULATE(
+			        COUNTA(Tbl_orders[Return_Status]),
+			        Tbl_orders[Return_Status] IN { "Completed", "Returned" }
+			    )
+			
+			RETURN
+			
+			DIVIDE(
+			    _ReturnedCount,
+			    _DeliveredCount
+			)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Financial
+		lineageTag: d412c3eb-8d7d-4485-afa7-d81a77701a07
+
+	measure 'Gross Profit Cumulative %' = ```
+			
+			
+			VAR _TotalProfit = 
+			    CALCULATE(
+			        [Gross Profit], 
+			        ALLSELECTED(Tbl_Product_dictionary[Product_SKU])
+			    )
+			
+			
+			VAR _CurrentProfit = [Gross Profit]
+			
+			
+			VAR _CumulativeProfit = 
+			    SUMX(
+			        FILTER(
+			            ALLSELECTED(Tbl_Product_dictionary[Product_SKU]),
+			            [Gross Profit] >= _CurrentProfit
+			        ),
+			        [Gross Profit]
+			    )
+			
+			RETURN
+			
+			DIVIDE(_CumulativeProfit, _TotalProfit)
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Financial
+		lineageTag: 19e299b9-eb62-49f3-bfdf-8c483aa90127
+
+	measure 'Pareto 80% Target' = DIVIDE(80, 100)
+		formatString: 0.00%;-0.00%;0.00%
+		displayFolder: Financial
+		lineageTag: b14556cf-d118-4170-8aa1-b66c26e533a5
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Źródło = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Kolumna 1" = _t]),
+				    #"Zmieniono typ" = Table.TransformColumnTypes(Źródło,{{"Kolumna 1", type text}}),
+				    #"Usunięto kolumny" = Table.RemoveColumns(#"Zmieniono typ",{"Kolumna 1"})
+				in
+				    #"Usunięto kolumny"
+
+	annotation PBI_ResultType = Table
+

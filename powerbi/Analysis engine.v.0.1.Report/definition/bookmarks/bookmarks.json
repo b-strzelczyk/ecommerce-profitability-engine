@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmarksMetadata/1.0.0/schema.json",
+  "items": [
+    {
+      "name": "63ac90a133c58730449c",
+      "displayName": "Time filters",
+      "children": [
+        "36cf3d903677b02e40e0",
+        "fa3083b50c8d9b003132",
+        "e025c85b702cc32dc38b",
+        "431800c20e834a184a21"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+table Tbl_Product_dictionary
+	lineageTag: 422c58c2-80fc-4913-a167-e4ec56994863
+
+	column Product_SKU
+		dataType: string
+		lineageTag: 05ec0b6f-b806-4fc0-bf97-a82dfafa6af4
+		summarizeBy: none
+		sourceColumn: Product_SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_Category
+		dataType: string
+		lineageTag: 403762b2-2d07-4176-baf0-03ba60eb4311
+		summarizeBy: none
+		sourceColumn: Product_Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product_Name
+		dataType: string
+		lineageTag: 1eb74159-cce1-49d3-8218-8087e24201bd
+		summarizeBy: none
+		sourceColumn: Product_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Unit_COGS
+		dataType: double
+		lineageTag: 337b8aeb-0fe6-4b5d-a499-b4ea2c512282
+		summarizeBy: none
+		sourceColumn: Unit_COGS
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Tbl_Product_dictionary = m
+		mode: import
+		source =
+				let
+				    Źródło = Excel.Workbook(File.Contents("C:\Users\barte\Downloads\Ecom_Profitability_Engine_Data_v1.0.xlsx"), null, true),
+				    Tbl_Product_dictionary_Table = Źródło{[Item="Tbl_Product_dictionary",Kind="Table"]}[Data],
+				    #"Zmieniono typ" = Table.TransformColumnTypes(Tbl_Product_dictionary_Table,{{"Product_SKU", type text}, {"Product_Category", type text}, {"Product_Name", type text}, {"Unit_COGS", type number}})
+				in
+				    #"Zmieniono typ"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+

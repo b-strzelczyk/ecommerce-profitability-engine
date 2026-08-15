@@ -1,0 +1,47 @@
+table Tbl_marketing
+	lineageTag: e0f99390-2dcc-4804-bcec-feb89988ca44
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 79f5ec28-3a4d-4030-98df-833b3115908a
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Ad_platform
+		dataType: string
+		lineageTag: 10011160-dddf-4c27-ab64-d0b99d4c4049
+		summarizeBy: none
+		sourceColumn: Ad_platform
+
+		annotation SummarizationSetBy = Automatic
+
+	column Spend_amount
+		dataType: double
+		lineageTag: 62ec9b18-3823-48e7-b97b-09e2a8b8fca1
+		summarizeBy: sum
+		sourceColumn: Spend_amount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition Tbl_marketing = m
+		mode: import
+		source =
+				let
+				    Źródło = Excel.Workbook(File.Contents("C:\Users\barte\Downloads\Ecom_Profitability_Engine_Data_v1.0.xlsx"), null, true),
+				    Tbl_marketing_Table = Źródło{[Item="Tbl_marketing",Kind="Table"]}[Data],
+				    #"Zmieniono typ" = Table.TransformColumnTypes(Tbl_marketing_Table,{{"Date", type date}, {"Ad_platform", type text}, {"Spend_amount", type number}}),
+				    #"Przefiltrowano wiersze" = Table.SelectRows(#"Zmieniono typ", each [Date] <> null and [Date] <> "")
+				in
+				    #"Przefiltrowano wiersze"
+
+	annotation PBI_NavigationStepName = Nawigacja
+
+	annotation PBI_ResultType = Table
+

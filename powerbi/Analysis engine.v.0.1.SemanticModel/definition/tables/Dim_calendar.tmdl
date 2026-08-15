@@ -1,0 +1,72 @@
+table Dim_calendar
+	lineageTag: 457670e5-2483-4d0a-bd14-d5dcd36f6709
+	dataCategory: Time
+
+	column Date
+		isKey
+		formatString: Short Date
+		lineageTag: b2aadfd5-6423-4bb5-b991-30bf344f4dae
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		formatString: 0
+		lineageTag: b1cc2785-f87f-4a2c-bed4-d50bb1e420cb
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Year]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Number'
+		formatString: 0
+		lineageTag: a477682d-62e6-4451-983b-d61ca80a2b3c
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [Month Number]
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		lineageTag: 4d9943ab-44ed-4fef-b208-403401ac6e9b
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Month Name]
+		sortByColumn: 'Month Number'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year-Month
+		dataType: dateTime
+		formatString: mmmm yyyy
+		lineageTag: b274b76e-060d-4591-8252-9f25c95710db
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Year-Month]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	partition Dim_calendar = calculated
+		mode: import
+		source =
+				
+				VAR MinDate = MIN( MIN('tbl_Orders'[Order_Date]), MIN('tbl_Marketing'[Date]) )
+				VAR MaxDate = MAX( MAX('tbl_Orders'[Order_Date]), MAX('tbl_Marketing'[Date]) )
+				RETURN
+				ADDCOLUMNS(
+				    CALENDAR(MinDate, MaxDate),
+				    "Year", YEAR([Date]),
+				    "Month Number", MONTH([Date]),
+				    "Month Name", FORMAT([Date], "MMM"),
+				    "Year-Month", FORMAT([Date], "YYYY-MM")
+				)
+
+	annotation PBI_Id = d54366c51e4141a2a1490ae396484bdf
+

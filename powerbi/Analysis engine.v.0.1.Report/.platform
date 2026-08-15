@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Analysis engine.v.0.1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "34ad4707-6e0a-4283-a547-8c80b085ff4a"
+  }
+}
