@@ -18,7 +18,8 @@ Most e-commerce owners struggle with "Data Granularity Mismatch" – sales happe
 - **Automated Data Processing:** Built-in safeguards in Power Query map the template data correctly into the relational model.
 
 ##  How to Use (Synthetic Data Demo)
-1. Download the `Test_1` template from the `/data` folder.
-2. Open the `.pbip` project in Power BI Desktop.
-3. Update the `FolderPath` parameter to point to the folder where you saved the template.
-4. Refresh and explore the dashboard!
+1. Download the `Ecom_profitability_engine_data_template_v1.0` template from the `/data` folder.
+2. Paste your sales and marketing data into the template. Alternatively, you can use the included `test_1` file filled with synthetic data to test the dashboard immediately.
+3. Open the `.pbip` project in Power BI Desktop.
+4. Update the `FolderPath` parameter to point to the folder where you saved the template.
+5. Refresh and explore the dashboard!
