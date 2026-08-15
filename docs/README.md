@@ -9,7 +9,7 @@ This project is an amateur automated Business Intelligence engine built in Power
 * **Python:** Used to generate 600+ rows of synthetic relational data (Orders, Products, Marketing) to populate the demo template.
 
 ##  The Problem it Solves
-Most e-commerce owners struggle with "Data Granularity Mismatch" – sales happen at the order-line level, while marketing spend happens at the daily-campaign level. This engine bridges this gap automatically once the data is pasted into the template.
+Most e-commerce business owners want to track their true profitability, but they lack the budget for Data Engineers and the technical skills to set up API connections, write SQL, or manage complex ETL pipelines. This project removes the "technical barrier to entry." By providing a simple, ready-made Excel template, anyone can access enterprise-grade analytics—just paste the data and hit refresh.
 
 ##  Core Features (KPIs)
 - **Zero-Tech Setup via Template:** Just copy and paste your daily/monthly exports into our ready-made input template. No API configurations or complex pipelines required.
